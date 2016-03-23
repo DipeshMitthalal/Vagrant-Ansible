@@ -1,0 +1,12 @@
+---
+- name: copy nginx config file
+  template:  src=nginx-load-balancer.conf dest=/etc/nginx/sites-available/default
+  notify: Restart Nginx
+
+
+- name: enable configuration
+  file: >
+    dest=/etc/nginx/sites-enabled/default
+    src=/etc/nginx/sites-available/default
+    state=link
+  notify: Restart Nginx

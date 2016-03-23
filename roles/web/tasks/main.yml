@@ -1,0 +1,30 @@
+---
+- name: install nginx
+  apt: name=nginx state=installed
+
+- name: write our nginx.conf
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  notify: Restart Nginx
+
+- name: write our /etc/nginx/sites-available/default
+  template: src=default-site dest=/etc/nginx/sites-available/default
+  notify: Restart Nginx
+
+- name: clean existing website content
+  file: path=/usr/share/nginx/html/* state=absent
+  ignore_errors: True #ignore errors incase if site not avaialble nothing to clean
+
+#Generates web page based on ansible varibales
+- name: deploy website content
+  template: src=index.html dest=/usr/share/nginx/html/index.html
+
+#- name: deploy website content from github
+#  git: repo=https://github.com/DipeshMitthalal/Sample-Webpage.git
+#         dest=/usr/share/nginx/html/
+#         version={{ app_version }}
+
+- name: enable configuration
+  file: >
+    dest=/etc/nginx/sites-enabled/default
+    src=/etc/nginx/sites-available/default
+    state=link

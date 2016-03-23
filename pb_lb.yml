@@ -1,0 +1,6 @@
+---
+- hosts: loadbalancers
+  sudo: True
+  roles:
+    - common
+    - lb
