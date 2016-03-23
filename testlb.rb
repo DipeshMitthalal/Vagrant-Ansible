@@ -13,7 +13,7 @@ OptionParser.new do |opts|
   opts.on('-n', '--requests', "Specify the numbeer of requests") do |v|
     hash_options[:numberOfRequests] = v
   end
-  opts.on('--version', 'Display the version') do
+  opts.on('-v', '--version', 'Display the version') do
     puts "VERSION 1"
     exit
   end

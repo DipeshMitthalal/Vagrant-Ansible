@@ -1,5 +1,5 @@
 # -*- mode: ruby -*-
-NUMBER_OF_MACHINES = 2
+NUMBER_OF_WEBSERVERS = 3
 CPU = 2
 MEMORY = 256
 ADMIN_USER = "vagrant"
@@ -12,14 +12,14 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   groups = {
-    "webservers" => ["web[1:#{NUMBER_OF_MACHINES}]"],
+    "webservers" => ["web[1:#{NUMBER_OF_WEBSERVERS}]"],
     "loadbalancers" => ["load_balancer"],
     "all_groups:children" => ["webservers","loadbalancers"]
   }
 
   # create some web servers
   # https://docs.vagrantup.com/v2/vagrantfile/tips.html
-  (1..NUMBER_OF_MACHINES).each do |i|
+  (1..NUMBER_OF_WEBSERVERS).each do |i|
     config.vm.define "web#{i}" do |node|
         node.vm.box = VM_VERSION
         node.vm.hostname = "web#{i}"
@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Only execute once the Ansible provisioner,
     # when all the machines are up and ready.
 
-      if i == NUMBER_OF_MACHINES
+      if i == NUMBER_OF_WEBSERVERS
           node.vm.provision "ansible" do |ansible|
             ansible.playbook = "pb_web.yml"
             ansible.sudo = true
