@@ -38,10 +38,11 @@ if hash_options[:numberOfRequests]
 end
 
 @response_hash = Hash.new(0)
-(0..numberOfRequests).each do |i|
+(0..numberOfRequests-1).each do |i|
 # Full
   http = Net::HTTP.new(uri.host, uri.port)
   response = http.request(Net::HTTP::Get.new(uri.request_uri))
+  #Read the response header and update the response_hash
   @response_hash[response["X-Backend-Server"]] += 1
 end
 
